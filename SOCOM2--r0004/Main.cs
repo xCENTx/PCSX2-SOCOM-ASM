@@ -1,24 +1,25 @@
 ﻿using Binarysharp.MemoryManagement;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using System;
 using Memory;
-using System.Drawing;
-using System.Collections.Generic;
 
 namespace NightFyre_SOCOM_2
 {
     public partial class Main : Form
     {
         Mem _mem = new Mem();
+        MemorySharp m = null;
         public static string PROCESSNAME = "pcsx2";
-        private static MemorySharp m = new MemorySharp(Process.GetProcessesByName(PROCESSNAME).FirstOrDefault());
         Dictionary<string, Binarysharp.MemoryManagement.Memory.RemoteAllocation> CodeCave = new Dictionary<string, Binarysharp.MemoryManagement.Memory.RemoteAllocation>();
         Dictionary<string, IntPtr> ScanResult = new Dictionary<string, IntPtr>();
         Dictionary<string, int> oldData = new Dictionary<string, int>();
         private static IntPtr PLAYEROBJECT = new IntPtr(0x2044D648);
         bool pcsx2Running;
+        bool bMemory;
         bool HACKACTIVE = false;
         bool PatternFound = false;
         bool scan1FAIL = false;
@@ -35,10 +36,10 @@ namespace NightFyre_SOCOM_2
         private void MainLoad(object sender, EventArgs e)
         {
             debugLabel.Text = "";
-            debugAddr1_label.Text = "";
-            debugAddr2_label.Text = "";
-            debugAddr3_label.Text = "";
-            debugAddr4_label.Text = "";
+            //debugAddr1_label.Text = "";
+            //debugAddr2_label.Text = "";
+            //debugAddr3_label.Text = "";
+            //debugAddr4_label.Text = "";
         }
 
         private void MainClosing(object sender, FormClosingEventArgs e)
@@ -51,10 +52,21 @@ namespace NightFyre_SOCOM_2
             Process[] pcsx2 = Process.GetProcessesByName(PROCESSNAME);
             if (pcsx2.Length > 0)
             {
+                if (!bMemory)
+                {
+                    MemorySharp m = new MemorySharp(Process.GetProcessesByName(PROCESSNAME).FirstOrDefault());
+                    bMemory = true;
+                }
+                debugLabel.ForeColor = Color.FromArgb(0, 169, 0);
+                debugLabel.Text = "PCSX2 DETECTED";
                 pcsx2Running = true;
                 return;
             }
+            debugLabel.ForeColor = Color.FromArgb(169, 0, 0);
+            debugLabel.Text = "PCSX2 NOT DETECTED";
             pcsx2Running = false;
+            bMemory = false;
+            QUIT();
         }
 
         private void MemoryTimer_Tick(object sender, EventArgs e)
@@ -73,7 +85,7 @@ namespace NightFyre_SOCOM_2
             { 
                 if (!PerfectShotCheckBox.Checked) 
                 { 
-                    if (!HACKACTIVE)
+                    if ((!HACKACTIVE) && (!PatternFound))
                     {
                         debugLabel.ForeColor = Color.FromArgb(169, 169, 0);
                         debugLabel.Text = "SCANNING .";
@@ -133,8 +145,6 @@ namespace NightFyre_SOCOM_2
                             if (!HACKACTIVE)
                             {
                                 NO_RECOIL1();
-                                
-                                //So we dont repeat the write
                                 HACKACTIVE = true;
                                 debugLabel.Text = "SUCCESS";
                             }
@@ -181,7 +191,7 @@ namespace NightFyre_SOCOM_2
             IntPtr HEXADDR = new IntPtr(Convert.ToInt32(test, 16));     //We also need it to be an IntPtr
             ScanResult.Add("a", HEXADDR);   //Now we add it to a dictionary
             debugLabel.Text = "SCANNING . .";
-            debugAddr1_label.Text = ScanResult["a"].ToString("X");
+            //debugAddr1_label.Text = ScanResult["a"].ToString("X");
             R2SCAN();
         }
 
@@ -200,7 +210,7 @@ namespace NightFyre_SOCOM_2
             IntPtr HEXADDR = new IntPtr(Convert.ToInt32(test, 16));     //We also need it to be an IntPtr
             ScanResult.Add("b", HEXADDR);   //Now we add it to a dictionary
             debugLabel.Text = "SCANNING . . .";
-            debugAddr2_label.Text = ScanResult["b"].ToString("X");
+            //debugAddr2_label.Text = ScanResult["b"].ToString("X");
             S1SCAN();
         }
 
@@ -219,7 +229,7 @@ namespace NightFyre_SOCOM_2
             IntPtr HEXADDR = new IntPtr(Convert.ToInt32(test, 16));     //We also need it to be an IntPtr
             ScanResult.Add("c", HEXADDR);   //Now we add it to a dictionary
             debugLabel.Text = "SCANNING . . . .";
-            debugAddr3_label.Text = ScanResult["c"].ToString("X");
+            //debugAddr3_label.Text = ScanResult["c"].ToString("X");
             S2SCAN();
         }
 
@@ -239,7 +249,7 @@ namespace NightFyre_SOCOM_2
             IntPtr HEXADDR = new IntPtr(Convert.ToInt32(test, 16));     //We also need it to be an IntPtr
             ScanResult.Add("d", HEXADDR);   //Now we add it to a dictionary
             debugLabel.Text = "SCANNING . . . .";
-            debugAddr4_label.Text = ScanResult["d"].ToString("X");
+            //debugAddr4_label.Text = ScanResult["d"].ToString("X");
 
             //Done with scans
             debugLabel.Text = "READY";
@@ -262,7 +272,7 @@ namespace NightFyre_SOCOM_2
             IntPtr HEXADDR = new IntPtr(Convert.ToInt32(test, 16));     //We also need it to be an IntPtr
             ScanResult.Add("e", HEXADDR);   //Now we add it to a dictionary
             debugLabel.Text = "SCANNING . . . .";
-            debugAddr1_label.Text = ScanResult["e"].ToString("X");
+            //debugAddr1_label.Text = ScanResult["e"].ToString("X");
         }
         #endregion
 
@@ -348,28 +358,28 @@ namespace NightFyre_SOCOM_2
         {
             if (scan1FAIL)
             {
-                debugAddr1_label.Text = "";
+                //debugAddr1_label.Text = "";
                 debugLabel.Text = "ERROR: 1";
                 scan1FAIL = false;
             }
             if (scan2FAIL)
             {
                 ScanResult.Remove("a");
-                debugAddr2_label.Text = "";
+                //debugAddr2_label.Text = "";
                 debugLabel.Text = "ERROR: 2";
                 scan2FAIL = false;
             }
             if (scan3FAIL)
             {
                 ScanResult.Remove("b");
-                debugAddr3_label.Text = "";
+                //debugAddr3_label.Text = "";
                 debugLabel.Text = "ERROR: 3";
                 scan3FAIL = false;
             }
             if (scan4FAIL)
             {
                 ScanResult.Remove("c");
-                debugAddr4_label.Text = "";
+                //debugAddr4_label.Text = "";
                 debugLabel.Text = "ERROR: 4";
                 scan3FAIL = false;
             }
@@ -396,10 +406,10 @@ namespace NightFyre_SOCOM_2
                 //oldData.Remove("RAPIDFIRE");
                 debugLabel.Text = "RE-SCAN REQUIRED";
                 debugLabel.ForeColor = Color.FromArgb(169, 0, 0);
-                debugAddr1_label.Text = "";
-                debugAddr2_label.Text = "";
-                debugAddr3_label.Text = "";
-                debugAddr4_label.Text = "";
+                //debugAddr1_label.Text = "";
+                //debugAddr2_label.Text = "";
+                //debugAddr3_label.Text = "";
+                //debugAddr4_label.Text = "";
                 HACKACTIVE = false;
                 PatternFound = false;
             }
