@@ -16,8 +16,8 @@ namespace sd2f16WET7B652
 
         public static async void shn54356Eqtyb2()
         {
-            IEnumerable<long> p1 = await _mem.AoBScan("89 11 C7 05 B8 A1 ?? 01 40 AA 5C 00 A1 D0 A2 ?? 01", false, true);
-            long psr1 = p1.FirstOrDefault();
+            IEnumerable<long> ps1 = await _mem.AoBScan("89 11 C7 05 B8 A1 ?? 01 40 AA 5C 00 A1 D0 A2 ?? 01", false, true);
+            long psr1 = ps1.FirstOrDefault();
             if (psr1 == 0)
             {
                 Main.df34A5G7F4d4ge = true;
@@ -30,8 +30,8 @@ namespace sd2f16WET7B652
             Main.debugLabel.Text = "SCANNING . .";
             Main.debugAddr1_label.Text = _SR["a"].ToString("X");
 
-            IEnumerable<long> p2 = await _mem.AoBScan("89 11 C7 05 B8 A1 ?? 01 40 AA 5C 00 83 05 D0 A2 ?? 01 04 E9", false, true);
-            long psr2 = p2.FirstOrDefault();
+            IEnumerable<long> ps2 = await _mem.AoBScan("89 11 C7 05 B8 A1 ?? 01 40 AA 5C 00 83 05 D0 A2 ?? 01 04 E9", false, true);
+            long psr2 = ps2.FirstOrDefault();
             if (psr2 == 0)
             {
                 Main.e4dghjk357gD7r = true;
@@ -63,7 +63,7 @@ namespace sd2f16WET7B652
                     "0C 8B 04 85 30 ?? ?? ?? BB ?? ?? " +
                     "?? 30 01 C1 0F 88 ?? ?? ?? D2 8B " +
                     "01 A3 04 9E ?? 01", false, true);
-            long psr4 = ps3.FirstOrDefault();
+            long psr4 = ps4.FirstOrDefault();
             if (psr4 == 0)
             {
                 Main.ag8kt75adgfh35();

@@ -194,11 +194,11 @@ namespace NightFyre_SOCOM_2
 
         private System.Windows.Forms.Button ScanButton;
         private System.Windows.Forms.CheckBox PerfectShotCheckBox;
-        public static System.Windows.Forms.Label debugLabel;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Timer ProcessTimer;
         private System.Windows.Forms.Timer MemoryTimer;
         private System.Windows.Forms.Button PatchButton;
+        public static System.Windows.Forms.Label debugLabel;
         public static System.Windows.Forms.Label debugAddr1_label;
         public static System.Windows.Forms.Label debugAddr2_label;
         public static System.Windows.Forms.Label debugAddr3_label;
